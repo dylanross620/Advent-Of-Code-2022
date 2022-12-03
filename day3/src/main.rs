@@ -52,26 +52,14 @@ fn puzzle_2(sacks: &Vec<Rucksack>) {
    let mut sum: usize = 0;
 
    for group in sacks.chunks(3) {
-       let mut common = HashSet::<u8>::new();
+       let sack = group[0].left.union(&group[0].right);
+       let badge = sack.into_iter()
+           .filter(|item| group[1].left.contains(item) || group[1].right.contains(item))
+           .filter(|item| group[2].left.contains(item) || group[2].right.contains(item))
+           .next()
+           .unwrap();
 
-       for sack in group.iter() {
-           if common.len() == 0 {
-               common = sack.left.union(&sack.right).map(|i| i.clone()).collect();
-           }
-           else {
-               let int = sack.left.union(&sack.right).map(|i| i.clone()).collect();
-               common = common.intersection(&int).map(|i| i.clone()).collect();
-           }
-       }
-
-       if common.len() == 1 {
-            for badge in common.iter() {
-                sum += get_point(*badge) as usize;
-            }
-       }
-       else {
-           println!("Error with common {:?}", common);
-       }
+       sum += get_point(*badge) as usize;
    }
 
    println!("Sum: {}", sum);
