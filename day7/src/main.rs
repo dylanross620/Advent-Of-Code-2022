@@ -50,7 +50,7 @@ impl Dir {
 
         for child in &self.contents {
             let tmp = child.borrow();
-            tmp.fmt_internal(f, depth + 1);
+            let _ = tmp.fmt_internal(f, depth + 1);
         }
 
         res
